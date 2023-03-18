@@ -1,1 +1,1 @@
-# sph-star-model
+# sph-toy-star
