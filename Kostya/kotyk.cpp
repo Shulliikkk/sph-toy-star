@@ -7,6 +7,7 @@
 #include<unistd.h>
 #include <chrono>
 
+
 template<typename T>
 using Vec_1d = std::vector<T>;
 template<typename T>
@@ -92,7 +93,6 @@ public:
 		}
 };
 
-/*
 void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, float h, int N_grid_cells) {
 	int N = particles.size();
 
@@ -100,8 +100,6 @@ void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, f
 		particles[i].change_density(particles[i].get_m() * particles[i].W(particles[i], h));
 		int n_grid = N_grid_cells / 2 + particles[i].get_position()[0] / (2 * h);
 		int m_grid =  N_grid_cells / 2 - particles[i].get_position()[1] / (2 * h);
-		//int n_grid = particles[i].get_position()[0] / (2 * h);
-		//int m_grid = particles[i].get_position()[1] / (2 * h);
 		for (int k = m_grid - 1; k < m_grid + 2; k++) {
 			if (k < 0 || k > N_grid_cells - 1) {
 				continue;
@@ -119,86 +117,6 @@ void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, f
 		}
 	}
 }
-*/
-
-/*
-void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, float h, int N_grid_cells) {
-	int N = particles.size();
-	for(int i = 0; i < N; i++) {
-		particles[i].change_density(particles[i].get_m() * particles[i].W(particles[i], h));
-		int n_grid = particles[i].get_position()[0] / (2 * h);
-		int m_grid = particles[i].get_position()[1] / (2 * h);
-		for (int k = m_grid - 1; k < m_grid + 2; k++) {
-			if (k < 0 || k > N_grid_cells - 1) {
-				continue;
-			}
-			for (int l = n_grid - 1; l < n_grid + 2; l++) {
-				if (l < 0 || l > N_grid_cells - 1) {
-					continue;
-				}
-				for (Particle particle : grid[N_grid_cells * k + l]) {
-					float rho_ij = particles[i].get_m() * particles[i].W(particle, h);
-					particles[i].change_density(particles[i].get_density() + rho_ij);
-					particle.change_density(particle.get_density() + rho_ij);
-				}
-			}
-		}
-	}
-}
-*/
-
-
-void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, float h, int N_grid_cells) {
-	//std::cout << N_grid_cells << '\n';
-	for (int i = 0; i < N_grid_cells; i++) {
-		for (int j = 0; j < N_grid_cells; j++) {
-			//std::cout << "kek " << grid[N_grid_cells * i + j].size() << '\n';
-			for (Particle particle_1 : grid[N_grid_cells * i + j]) {
-				for (Particle particle_2 : grid[N_grid_cells * i + j]) {
-					float rho_ij = particle_1.get_m() * particle_1.W(particle_2, h);
-					particle_1.change_density(particle_1.get_density() + rho_ij);
-				}
-				//std::cout << "lol " << i << ' ' << j << '\n';
-				if (j + 1 < N_grid_cells) {
-					for (Particle particle_2 : grid[N_grid_cells * i + (j + 1)]) {
-						float rho_ij = particle_1.get_m() * particle_1.W(particle_2, h);
-						particle_1.change_density(particle_1.get_density() + rho_ij);
-						particle_2.change_density(particle_2.get_density() + rho_ij);
-					}
-					//std::cout << "j + 1 " << i << ' ' << j << '\n';
-				}
-
-				if (j + 1 < N_grid_cells && 0 < i - 1) {
-					for (Particle particle_2 : grid[N_grid_cells * (i - 1) + (j + 1)]) {
-						float rho_ij = particle_1.get_m() * particle_1.W(particle_2, h);
-						particle_1.change_density(particle_1.get_density() + rho_ij);
-						particle_2.change_density(particle_2.get_density() + rho_ij);
-					}
-					//std::cout << "i + 1 " << i << ' ' << j << '\n';
-				}
-
-				if (i + 1 < N_grid_cells) {
-					for (Particle particle_2 : grid[N_grid_cells * (i + 1) + j]) {
-						float rho_ij = particle_1.get_m() * particle_1.W(particle_2, h);
-						particle_1.change_density(particle_1.get_density() + rho_ij);
-						particle_2.change_density(particle_2.get_density() + rho_ij);
-					}
-					//std::cout << "i + 1 " << i << ' ' << j << '\n';
-				}
-
-				if ((j + 1 < N_grid_cells) && (i + 1 < N_grid_cells)) {
-					for (Particle particle_2 : grid[N_grid_cells * (i + 1) + (j + 1)]) {
-						float rho_ij = particle_1.get_m() * particle_1.W(particle_2, h);
-						particle_1.change_density(particle_1.get_density() + rho_ij);
-						particle_2.change_density(particle_2.get_density() + rho_ij);
-					}
-					//std::cout << "j + 1; i + 1 " << i << ' ' << j << '\n';
-				}
-			}
-		}
-	}
-}
-
 
 void calc_pressure_for_all(Vec_1d<Particle>& particles, float k, float n) {
 	int N = particles.size();
@@ -245,6 +163,7 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
         int m_grid =  N_grid_cells / 2 - particles[i].get_position()[1] / (2 * h);
         grid[N_grid_cells * m_grid + n_grid].push_back(particles[i]);
     }
+
     Vec_2d<float> acc = acceleration(particles, grid, h, k, n, lmbda, nu, N_grid_cells);
     Vec_1d<float> rho (N);
     for (int i = 0; i < Nt; i ++){
@@ -254,24 +173,6 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
             acc = acceleration(particles, grid, h, k, n, lmbda, nu, N_grid_cells);
             particles[j].change_velocity(acc[j], dt);
         }
-
-				/*
-				for (int m = 0; m < N_grid_cells; m++) {
-					for (int n = 0; n < N_grid_cells; n++) {
-						Vec_1d<Particle> cell = grid[N_grid_cells * m + n];
-						for (auto it_particle = cell.begin(); it_particle != cell.end(); it_particle++) {
-							result[i].push_back(*it_particle);
-							int n_grid = (*it_particle).get_position()[0] / (2 * h);
-							int m_grid = (*it_particle).get_position()[1] / (2 * h);
-							if (n_grid != n || m_grid != m) {
-								cell.erase(it_particle);
-								grid[N_grid_cells * m_grid + n_grid].push_back(*it_particle);
-							}
-						}
-					}
-				}
-				*/
-
 
 				for (int k = 0; k < N_grid_cells * N_grid_cells; k++) {
 	          grid[k].clear();
@@ -288,31 +189,55 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
 	}
 
 int main(){
-		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    const int N_part = 100;
     float h = 0.1;
-		float d = 6;
-		Vec_1d<Particle> particles = {Particle(Vec_1d<float>{-1.54909388, 1.40804976, 0}, Vec_1d<float>{0.025548152,  0.082706075, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.43990639,  -1.59498159, 0}, Vec_1d<float>{0.04342804,   0.048848213,0}, 0.2),
-																		Particle(Vec_1d<float>{-1.27890266, 1.26921543, 0}, Vec_1d<float>{0.081535258,  0.019112969, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.60406402,  1.32339721, 0}, Vec_1d<float>{0.094470003, 0.088040316, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.07615878, -1.62474234, 0}, Vec_1d<float>{0.049821641, 0.07471592, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.32821573,  1.00483002, 0}, Vec_1d<float>{0.056551748,  0.054349262, 0}, 0.2),
-																		Particle(Vec_1d<float>{-1.34537595,  1.7395526 , 0}, Vec_1d<float>{0.006876223, 0.062816352, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.02683444,  1.73286105, 0}, Vec_1d<float>{0.027522109, 0.035860894, 0}, 0.2),
-																		Particle(Vec_1d<float>{-1.07508888,  1.96809424, 0}, Vec_1d<float>{0.018117553,  0.016827289, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.42200362, -1.61358428, 0}, Vec_1d<float>{0.075123249,  0.06037533, 0}, 0.2),
-																		Particle(Vec_1d<float>{1.94909388, 1.20804976, 0}, Vec_1d<float>{0.025548152,  0.082706075, 0}, 0.2)};
+    float d = 8.;
 
-    float k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.0005, maxt = 0.4;
-    Vec_2d<float> a(10, Vec_1d<float>(2));
-    Vec_2d<Particle> result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
-    std::cout << std::setprecision(7);
+    std::vector <sf::CircleShape> sprites(N_part);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<> NormRand(0, 0.1);
 
-    for (std::size_t i = 0; i < result.size(); i++){
-        for(std::size_t j = 0; j < result[i].size(); j++){
-            std::cout << result[i][j].get_position()[0] << ' ' << result[i][j].get_position()[1] << '\n';
-        }
+    Vec_1d<Particle> particles;
+    for (int i = 0; i < N_part; i++) {
+        particles.push_back(Particle(Vec_1d<float>{NormRand(gen), NormRand(gen), 0}, Vec_1d<float>{NormRand(gen),  NormRand(gen), 0}, 0.03));
     }
-		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-		std::cout << "Diff(ms) = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
+
+    float k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.04, maxt = 6;
+    Vec_2d<float> a(N_part, Vec_1d<float>(2));
+    Vec_2d<Particle> result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "Diff(ms) = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
+        std::size_t step = 0;
+        sf::RenderWindow window (sf::VideoMode (400, 400), " SFML works!");
+        float want_fps = 5;
+        sf::Clock loop_timer;
+        while (window.isOpen()) {
+          sf::Event event;
+          while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+              window.close();
+          }
+          window.clear();
+          for (sf::CircleShape &sprite : sprites) {
+            sprite.setRadius(1);
+            for(std::size_t j = 0; j < result[step].size(); j++){
+              sprite.setPosition(result[step][j].get_position()[0] * 100 + 200, result[step][j].get_position()[1] * 60 + 200);
+              window.draw(sprite);
+            }
+          }
+          
+            window.display();
+            if (step + 1 < result.size())
+                step += 1;
+            else
+                step = 0;
+            sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
+        sf::Int32 time_to_sleep = int(1000.f/want_fps) - frame_duration;
+        if (time_to_sleep > 0) {
+            sf::sleep(sf::milliseconds(time_to_sleep));
+        }
+        loop_timer.restart();
+        }
 }
