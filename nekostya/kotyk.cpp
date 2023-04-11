@@ -193,53 +193,62 @@ int main() {
     double d = 8.;
     Vec_2d<Particle> result;
     Vec_1d<Particle> particles;
+    double k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.04, maxt = 6;
+    Vec_2d<double> a(N_part, Vec_1d<double>(2));
 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<> NormRand(0, 0.1);
 
-{
-    Timer<std::chrono::seconds> t;
+
+    //Timer<std::chrono::seconds> t;
+    //unsigned counter;
 
     for (int i = 0; i < N_part; i++) {
-        particles.push_back(Particle(Vec_1d<double>{NormRand(gen), NormRand(gen), 0}, Vec_1d<double>{NormRand(gen), NormRand(gen), 0}, 0.03));
+        particles.push_back(Particle(Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
+                                     Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
+                                     0.03)
+        );
     }
 
-    double k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.04, maxt = 6;
-    Vec_2d<double> a(N_part, Vec_1d<double>(2));
-    Vec_2d<Particle> result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
-}
+    //std::cout << "Particles are initialized in " << counter << " milliseconds";
+    //std::cout << std::endl;
 
-    std::vector <sf::CircleShape> sprites(N_part);
+    result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
+
+
+    std::vector<sf::CircleShape> sprites(N_part);
     std::size_t step = 0;
-        sf::RenderWindow window (sf::VideoMode (400, 400), " SFML works!");
-        double want_fps = 5;
-        sf::Clock loop_timer;
-        while (window.isOpen()) {
-          sf::Event event;
-          while (window.pollEvent(event)) {
+    sf::RenderWindow window(sf::VideoMode (400, 400), " SFML works!");
+    double want_fps = 5;
+    sf::Clock loop_timer;
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-              window.close();
-          }
-          window.clear();
-          for (sf::CircleShape &sprite : sprites) {
+                window.close();
+        }
+        window.clear();
+        for (sf::CircleShape &sprite : sprites) {
             sprite.setRadius(1);
-            for(std::size_t j = 0; j < result[step].size(); j++){
-              sprite.setPosition(result[step][j].get_position()[0] * 100 + 200, result[step][j].get_position()[1] * 60 + 200);
-              window.draw(sprite);
+            for(std::size_t j = 0; j < result[step].size(); j++) {
+                sprite.setPosition(result[step][j].get_position()[0] * 100 + 200,
+                                   result[step][j].get_position()[1] * 60 + 200);
+                window.draw(sprite);
             }
-          }
-          
-            window.display();
-            if (step + 1 < result.size())
-                step += 1;
-            else
-                step = 0;
-            sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
+        }
+
+        window.display();
+
+        if (step + 1 < result.size()) step += 1;
+        else step = 0;
+
+        sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
         sf::Int32 time_to_sleep = int(1000.f/want_fps) - frame_duration;
         if (time_to_sleep > 0) {
             sf::sleep(sf::milliseconds(time_to_sleep));
         }
         loop_timer.restart();
-        }
+    }
 }
