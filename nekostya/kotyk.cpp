@@ -6,91 +6,10 @@
 #include <random>
 #include <unistd.h>
 #include <chrono>
+
+#include "Utils.h"
+#include "Particle.h"
 #include "Timer.h"
-
-template<typename T>
-using Vec_1d = std::vector<T>;
-template<typename T>
-using Vec_2d = std::vector<std::vector<T>>;
-template<typename T>
-using Vec_3d = std::vector<std::vector<std::vector<T>>>;
-
-const double PI = std::acos(-1.0);
-
-class Particle {
-private:
-	double m;
-	Vec_1d<double> velocity = Vec_1d<double>(3);
-	Vec_1d<double> position = Vec_1d<double>(3);
-	double rho;
-	double p;
-
-public:
-    Particle(Vec_1d<double> position, Vec_1d<double> velocity, double m): m(m), velocity(velocity), position(position) {
-    }
-
-    double distance(Particle& other) {
-        return std::sqrt(std::pow(this->position[0]-other.position[0], 2) +
-                         std::pow(this->position[1]-other.position[1], 2) +
-                         std::pow(this->position[2]-other.position[2], 2));
-    }
-
-	double W(Particle& other, double h) {
-	    double abs_r = distance(other);
-        return 1 / (h * h * h + std::pow(PI, 1.5))
-                * std::exp(- abs_r * abs_r / (h * h));
-	}
-
-	Vec_1d<double> gradW(Particle& other, double h) {
-	    double abs_r = distance(other);
-	    double scalar_deriv = -2 / (h * h * h * h * h * std::pow(PI, 1.5))
-                                * std::exp(- abs_r * abs_r / (h * h));
-	    Vec_1d<double> grad = {scalar_deriv * (this->position[0] - other.position[0]),
-                              scalar_deriv * (this->position[1] - other.position[1]),
-                              scalar_deriv * (this->position[2] - other.position[2])};
-        return grad;
-	}
-
-    Vec_1d<double> get_position() const {
-        return position;
-    }
-
-    Vec_1d<double> get_velocity() const {
-        return velocity;
-    }
-
-    double get_m() const {
-        return m;
-    }
-
-    double get_density() const {
-        return rho;
-    }
-
-    double get_pressure() const {
-        return p;
-    }
-
-    void change_velocity(Vec_1d<double>& acc, double dt) {
-        for (int k = 0; k < 3; k++) {
-            velocity[k] += acc[k] * dt / 2;
-        }
-    }
-
-    void change_position(Vec_1d<double> velocity, double dt) {
-        for (int k = 0; k < 3; k ++) {
-            position[k] += velocity[k] * dt;
-        }
-    }
-
-    void change_density(double density) {
-        rho = density;
-    }
-
-    void change_pressure(double pressure) {
-        p = pressure;
-    }
-};
 
 void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, double h, int N_grid_cells) {
 	int N = particles.size();
@@ -188,7 +107,7 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, double h, double d, double k,
 	}
 
 int main() {
-    const int N_part = 100;
+    const int N_part = 50;
     double h = 0.1;
     double d = 8.;
     Vec_2d<Particle> result;
@@ -200,22 +119,18 @@ int main() {
     std::mt19937 gen(rd());
     std::normal_distribution<> NormRand(0, 0.1);
 
+    {
+        Timer<std::chrono::seconds> t;
 
-    //Timer<std::chrono::seconds> t;
-    //unsigned counter;
+        for (int i = 0; i < N_part; i++) {
+            particles.push_back(Particle(Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
+                                         Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
+                                         0.03)
+            );
+        }
 
-    for (int i = 0; i < N_part; i++) {
-        particles.push_back(Particle(Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
-                                     Vec_1d<double>{NormRand(gen), NormRand(gen), 0},
-                                     0.03)
-        );
+        result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
     }
-
-    //std::cout << "Particles are initialized in " << counter << " milliseconds";
-    //std::cout << std::endl;
-
-    result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
-
 
     std::vector<sf::CircleShape> sprites(N_part);
     std::size_t step = 0;
