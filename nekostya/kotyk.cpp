@@ -8,9 +8,11 @@
 #include <chrono>
 
 #include "Utils.h"
-#include "Particle.h"
 #include "Timer.h"
+#include "Particle.h"
+#include "Processing.h"
 
+/*
 void calc_density_for_all(Vec_1d<Particle>& particles, Vec_1d<Particle>* grid, double h, int N_grid_cells) {
 	int N = particles.size();
 
@@ -67,7 +69,7 @@ Vec_2d<double> acceleration(Vec_1d<Particle> particles, Vec_1d<Particle>* grid, 
     return a;
 }
 
-Vec_2d<Particle> calc(Vec_1d<Particle>& particles, double h, double d, double k, double n, double lmbda, double nu, double tmax, double dt){
+Vec_2d<Particle> calc(Vec_1d<Particle>& particles, double h, double d, double k, double n, double lmbda, double nu, double tmax, double dt) {
     int N = particles.size();
     int Nt = tmax / dt;
     Vec_2d<Particle> result (Nt);
@@ -104,7 +106,8 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, double h, double d, double k,
         }
     }
     return result;
-	}
+}
+*/
 
 int main() {
     const int N_part = 50;
@@ -166,4 +169,6 @@ int main() {
         }
         loop_timer.restart();
     }
+
+    return 0;
 }

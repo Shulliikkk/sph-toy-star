@@ -11,13 +11,13 @@ double Particle::distance_to(Particle& other) const {
 
 double Particle::W(Particle& other, double h) {
     double abs_r = distance_to(other);
-    return 1 / (std::pow(h, 3) + std::pow(PI, 1.5)) *
+    return 1 / std::pow(h, 3) / std::pow(PI, 1.5) *
            std::exp(-abs_r / h * abs_r / h);
 }
 
 Vec_1d<double> Particle::gradW(Particle& other, double h) {
     double abs_r = distance_to(other);
-    double scalar_deriv = -2 / (std::pow(h, 5) * std::pow(PI, 1.5)) *
+    double scalar_deriv = -2 / std::pow(h, 5) / std::pow(PI, 1.5) *
                           std::exp(-abs_r / h * abs_r / h);
     
     Vec_1d<double> grad = {

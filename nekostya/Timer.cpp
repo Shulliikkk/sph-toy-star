@@ -1,3 +1,5 @@
+#include "Timer.h"
+
 template<typename Duration_Type>
 Timer<Duration_Type>::Timer() : start(std::chrono::steady_clock::now()),
                  counter(nullptr) {
@@ -20,3 +22,7 @@ Timer<Duration_Type>::~Timer() {
     }
 }
 
+template class Timer<std::chrono::nanoseconds>;
+template class Timer<std::chrono::microseconds>;
+template class Timer<std::chrono::milliseconds>;
+template class Timer<std::chrono::seconds>;

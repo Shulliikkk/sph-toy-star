@@ -16,5 +16,4 @@ public:
 };
 
 #endif //TIMER_H
-#include "Timer.tpp"
 
