@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include<vector>
-#include<iostream>
-#include<cmath>
-#include<iomanip>
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <iomanip>
 #include <random>
-#include<unistd.h>
+#include <unistd.h>
 #include <chrono>
 
 
@@ -22,20 +22,19 @@ const float PI = std::acos(-1.0);;
 class Particle{
 private:
 	float m;
-	Vec_1d<float> velocity =Vec_1d<float>(3);
-	Vec_1d<float> position = Vec_1d<float>(3);
 	float rho;
 	float p;
+	Vec_1d<float> velocity =Vec_1d<float>(2);
+	Vec_1d<float> position = Vec_1d<float>(2);
 
 public:
-    Particle(Vec_1d<float> position, Vec_1d<float> velocity, float m): m(m), velocity(velocity), position(position){
+  Particle(Vec_1d<float> position, Vec_1d<float> velocity, float m): m(m), velocity(velocity), position(position){
     }
 
-    float distance(Particle& other){
+  float distance(Particle& other){
         return std::sqrt(std::pow(this->position[0]-other.position[0], 2) +
-                         std::pow(this->position[1]-other.position[1], 2) +
-                         std::pow(this->position[2]-other.position[2], 2));
-    }
+                         std::pow(this->position[1]-other.position[1], 2));
+  }
 	float W(Particle& other, float h){
 	    float abs_r = distance(other);
         return 1 / (h * h * h + std::pow(PI, 1.5))
@@ -47,8 +46,7 @@ public:
 	    float scalar_deriv = -2 / (h * h * h * h * h * std::pow(PI, 1.5))
                                 * std::exp(- abs_r * abs_r / (h * h));
 	    Vec_1d<float> grad = {scalar_deriv * (this->position[0] - other.position[0]),
-                              scalar_deriv * (this->position[1] - other.position[1]),
-                              scalar_deriv * (this->position[2] - other.position[2])};
+                              scalar_deriv * (this->position[1] - other.position[1])};
         return grad;
 	}
 
@@ -73,13 +71,13 @@ public:
 		}
 
     void change_velocity(Vec_1d<float>& acc, float dt){
-        for (int k = 0; k < 3; k ++){
+        for (int k = 0; k < 2; k ++){
             velocity[k] += acc[k] * dt / 2;
         }
     }
 
     void change_position(Vec_1d<float> velocity, float dt){
-        for (int k = 0; k < 3; k ++){
+        for (int k = 0; k < 2; k ++){
             position[k] += velocity[k] * dt;
         }
     }
@@ -165,7 +163,7 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
     }
 
     Vec_2d<float> acc = acceleration(particles, grid, h, k, n, lmbda, nu, N_grid_cells);
-    Vec_1d<float> rho (N);
+    Vec_1d<float> rho(N);
     for (int i = 0; i < Nt; i ++){
         for (int j = 0; j < N; j++){
             particles[j].change_velocity(acc[j], dt);
@@ -178,7 +176,7 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
 	          grid[k].clear();
 	      }
 
-        for (int j = 0; j < N; j ++) {
+        for (int j = 0; j < N; j++) {
             result[i].push_back(particles[j]);
             int n_grid =  N_grid_cells / 2 + particles[j].get_position()[0] / (2 * h);
             int m_grid =  N_grid_cells / 2 - particles[j].get_position()[1] / (2 * h);
@@ -189,26 +187,27 @@ Vec_2d<Particle> calc(Vec_1d<Particle>& particles, float h, float d, float k, fl
 	}
 
 int main(){
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    const int N_part = 100;
-    float h = 0.1;
-    float d = 8.;
+		    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+		    const int N_part = 20;
+		    float h = 0.1;
+		    float d = 8;
 
-    std::vector <sf::CircleShape> sprites(N_part);
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::normal_distribution<> NormRand(0, 0.1);
+		    std::vector <sf::CircleShape> sprites(N_part);
+		    std::random_device rd;
+		    std::mt19937 gen(rd());
+		    std::normal_distribution<> NormRand(0, 0.1);
 
-    Vec_1d<Particle> particles;
-    for (int i = 0; i < N_part; i++) {
-        particles.push_back(Particle(Vec_1d<float>{NormRand(gen), NormRand(gen), 0}, Vec_1d<float>{NormRand(gen),  NormRand(gen), 0}, 0.03));
-    }
+		    Vec_1d<Particle> particles;
+		    for (int i = 0; i < N_part; i++) {
+		        particles.push_back(Particle(Vec_1d<float>{NormRand(gen), NormRand(gen), 0}, Vec_1d<float>{NormRand(gen),  NormRand(gen), 0}, 0.03));
+		    }
 
-    float k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.04, maxt = 6;
-    Vec_2d<float> a(N_part, Vec_1d<float>(2));
-    Vec_2d<Particle> result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
-    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    std::cout << "Diff(ms) = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
+		    float k = 0.1, n = 1, nu = 1, lmbda = 4, dt = 0.04, maxt = 6;
+		    Vec_2d<float> a(N_part, Vec_1d<float>(2));
+		    Vec_2d<Particle> result = calc(particles, h, d, k, n, lmbda, nu, maxt, dt);
+		    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		    std::cout << "Diff(ms) = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
+
         std::size_t step = 0;
         sf::RenderWindow window (sf::VideoMode (400, 400), " SFML works!");
         float want_fps = 5;
@@ -227,7 +226,7 @@ int main(){
               window.draw(sprite);
             }
           }
-          
+
             window.display();
             if (step + 1 < result.size())
                 step += 1;
