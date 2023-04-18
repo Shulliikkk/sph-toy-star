@@ -322,78 +322,75 @@ int main()
 
 //шкала
 
-sf::VertexArray quad1(sf::Quads, 4);
-sf::VertexArray quad2(sf::Quads, 4);
-sf::VertexArray quad3(sf::Quads, 4);
+        sf::VertexArray quad1(sf::Quads, 4);
+        sf::VertexArray quad2(sf::Quads, 4);
+        sf::VertexArray quad3(sf::Quads, 4);
 
 
-quad1[0].position = sf::Vector2f(560.f, 155.f);
-quad1[1].position = sf::Vector2f(590.f, 155.f);
-quad1[2].position = sf::Vector2f(590.f, 255.f);
-quad1[3].position = sf::Vector2f(560.f, 255.f);
+        quad1[0].position = sf::Vector2f(560.f, 155.f);
+        quad1[1].position = sf::Vector2f(590.f, 155.f);
+        quad1[2].position = sf::Vector2f(590.f, 255.f);
+        quad1[3].position = sf::Vector2f(560.f, 255.f);
 
-quad2[0].position = sf::Vector2f(560.f, 255.f);
-quad2[1].position = sf::Vector2f(590.f, 255.f);
-quad2[2].position = sf::Vector2f(590.f, 350.f);
-quad2[3].position = sf::Vector2f(560.f, 350.f);
+        quad2[0].position = sf::Vector2f(560.f, 255.f);
+        quad2[1].position = sf::Vector2f(590.f, 255.f);
+        quad2[2].position = sf::Vector2f(590.f, 350.f);
+        quad2[3].position = sf::Vector2f(560.f, 350.f);
 
-quad3[0].position = sf::Vector2f(560.f, 350.f);
-quad3[1].position = sf::Vector2f(590.f, 350.f);
-quad3[2].position = sf::Vector2f(590.f, 445.f);
-quad3[3].position = sf::Vector2f(560.f, 445.f);
-
-
-
-quad1[0].color = sf::Color{255, 0, 255, 255};
-quad1[1].color = sf::Color{255, 0, 255, 255};
-quad1[2].color = sf::Color{0, 255, 255, 255};
-quad1[3].color = sf::Color{0, 255, 255, 255};
-
-quad2[0].color = sf::Color{0, 255, 255, 255};
-quad2[1].color = sf::Color{0, 255, 255, 255};
-quad2[2].color = sf::Color{255, 255, 0, 255};
-quad2[3].color = sf::Color{255, 255, 0, 255};
-
-quad3[0].color = sf::Color{255, 255, 0, 255};
-quad3[1].color = sf::Color{255, 255, 0, 255};
-quad3[2].color = sf::Color{255, 0, 0, 255};
-quad3[3].color = sf::Color{255, 0, 0, 255};
+        quad3[0].position = sf::Vector2f(560.f, 350.f);
+        quad3[1].position = sf::Vector2f(590.f, 350.f);
+        quad3[2].position = sf::Vector2f(590.f, 445.f);
+        quad3[3].position = sf::Vector2f(560.f, 445.f);
 
 
-sf::Vertex line1[] =
-{
-    sf::Vertex(sf::Vector2f(560.f, 155.f)),
-    sf::Vertex(sf::Vector2f(590.f, 155.f))
-};
+        quad1[0].color = sf::Color{255, 0, 255, 255};
+        quad1[1].color = sf::Color{255, 0, 255, 255};
+        quad1[2].color = sf::Color{0, 255, 255, 255};
+        quad1[3].color = sf::Color{0, 255, 255, 255};
 
-sf::Vertex line2[] =
-{
-    sf::Vertex(sf::Vector2f(590.f, 155.f)),
-    sf::Vertex(sf::Vector2f(590.f, 445.f))
-};
+        quad2[0].color = sf::Color{0, 255, 255, 255};
+        quad2[1].color = sf::Color{0, 255, 255, 255};
+        quad2[2].color = sf::Color{255, 255, 0, 255};
+        quad2[3].color = sf::Color{255, 255, 0, 255};
 
-sf::Vertex line3[] =
-{
-    sf::Vertex(sf::Vector2f(590.f, 445.f)),
-    sf::Vertex(sf::Vector2f(560.f, 445.f))
-};
-
-sf::Vertex line4[] =
-{
-    sf::Vertex(sf::Vector2f(560.f, 445.f)),
-    sf::Vertex(sf::Vector2f(560.f, 155.f))
-};
+        quad3[0].color = sf::Color{255, 255, 0, 255};
+        quad3[1].color = sf::Color{255, 255, 0, 255};
+        quad3[2].color = sf::Color{255, 0, 0, 255};
+        quad3[3].color = sf::Color{255, 0, 0, 255};
 
 
-window.draw(quad1);
-window.draw(quad2);
-window.draw(quad3);
+        sf::Vertex line1[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 155.f)),
+            sf::Vertex(sf::Vector2f(590.f, 155.f))
+        };
 
-window.draw(line1, 2, sf::Lines);
-window.draw(line2, 2, sf::Lines);
-window.draw(line3, 2, sf::Lines);
-window.draw(line4, 2, sf::Lines);
+        sf::Vertex line2[] =
+        {
+            sf::Vertex(sf::Vector2f(590.f, 155.f)),
+            sf::Vertex(sf::Vector2f(590.f, 445.f))
+        };
 
+        sf::Vertex line3[] =
+        {
+            sf::Vertex(sf::Vector2f(590.f, 445.f)),
+            sf::Vertex(sf::Vector2f(560.f, 445.f))
+        };
+
+        sf::Vertex line4[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 445.f)),
+            sf::Vertex(sf::Vector2f(560.f, 155.f))
+        };
+
+        window.draw(quad1);
+        window.draw(quad2);
+        window.draw(quad3);
+
+        window.draw(line1, 2, sf::Lines);
+        window.draw(line2, 2, sf::Lines);
+        window.draw(line3, 2, sf::Lines);
+        window.draw(line4, 2, sf::Lines);
 
         window.display();
 
