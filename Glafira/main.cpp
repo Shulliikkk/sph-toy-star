@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
-#include<vector>
-#include<iostream>
-#include<cmath>
-#include<iomanip>
+#include <vector>
+#include <iostream>
+#include <cmath>
+#include <iomanip>
 #include <random>
-#include<unistd.h>
-#include<algorithm>
+#include <unistd.h>
+#include <algorithm>
 
 template<typename T>
 using Vec_1d = std::vector<T>;
@@ -208,7 +208,7 @@ sf::Color hsv(int hue, float sat, float val)
 
 int main()
 {
-    const int N_part = 100;
+    const int N_part = 500;
     float h = 0.1;
 
     std::vector <sf::CircleShape> sprites(N_part);
@@ -242,7 +242,7 @@ int main()
     }
 
     sf::RenderWindow window (sf::VideoMode (600, 600), "Toy Star Simulation");
-    float want_fps = 200;
+    float want_fps = 5000;
     sf::Clock loop_timer;
 
     auto it = std::minmax_element(rhos.begin(), rhos.end(), std::greater<float>());
