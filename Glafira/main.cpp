@@ -6,6 +6,7 @@
 #include <random>
 #include <unistd.h>
 #include <algorithm>
+#include <string> 
 
 template<typename T>
 using Vec_1d = std::vector<T>;
@@ -208,7 +209,7 @@ sf::Color hsv(int hue, float sat, float val)
 
 int main()
 {
-    const int N_part = 500;
+    const int N_part = 100;
     float h = 0.1;
 
     std::vector <sf::CircleShape> sprites(N_part);
@@ -242,7 +243,7 @@ int main()
     }
 
     sf::RenderWindow window (sf::VideoMode (600, 600), "Toy Star Simulation");
-    float want_fps = 5000;
+    float want_fps = 60;
     sf::Clock loop_timer;
 
     auto it = std::minmax_element(rhos.begin(), rhos.end(), std::greater<float>());
@@ -383,14 +384,197 @@ int main()
             sf::Vertex(sf::Vector2f(560.f, 155.f))
         };
 
+
+        sf::Text text_min;
+        sf::Text text_max;
+        sf::Text text_half;
+        sf::Text text_quarter;
+
+        sf::Font font;
+        font.loadFromFile("font.ttf");
+
+        text_min.setFont(font);
+        text_max.setFont(font); 
+        text_half.setFont(font); 
+        text_quarter.setFont(font);  
+
+        std::string min_str = std::to_string(min_rho);
+        std::string max_str = std::to_string(max_rho);
+        std::string half_str = std::to_string(rhos_half);
+        std::string quarter_str = std::to_string(rhos_quarter);
+
+        text_min.setString(min_str);
+        text_max.setString(max_str);
+        text_half.setString(half_str);
+        text_quarter.setString(quarter_str);
+
+        int size = 12;
+
+        text_min.setCharacterSize(size);
+        text_max.setCharacterSize(size); 
+        text_half.setCharacterSize(size); 
+        text_quarter.setCharacterSize(size);  
+
+
+        text_min.setFillColor(sf::Color::White);
+        text_max.setFillColor(sf::Color::White);
+        text_half.setFillColor(sf::Color::White);
+        text_quarter.setFillColor(sf::Color::White);
+
+        text_min.setPosition(560.f - 7 * min_str.length(), 445.f - size / 2);
+        text_max.setPosition(560.f - 7 * max_str.length(), 155.f - size / 2);
+        text_half.setPosition(560.f - 7 * half_str.length(), 300.f - size / 2);
+        text_quarter.setPosition(560.f - 7 * quarter_str.length(), 372.5 - size / 2);
+
+
+        sf::Vertex line5[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 300.f)),
+            sf::Vertex(sf::Vector2f(590.f, 300.f))
+        };
+
+        sf::Vertex line6[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 372.5)),
+            sf::Vertex(sf::Vector2f(590.f, 372.5))
+        };
+
+        sf::Vertex line7[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 155.f)),
+            sf::Vertex(sf::Vector2f(590.f, 155.f))
+        };
+
+        sf::Vertex line8[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 445.f)),
+            sf::Vertex(sf::Vector2f(590.f, 445.f))
+        };
+
+        sf::Vertex line9[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 299.f)),
+            sf::Vertex(sf::Vector2f(590.f, 299.f))
+        };
+
+        sf::Vertex line10[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 371.5)),
+            sf::Vertex(sf::Vector2f(590.f, 371.5))
+        };
+
+        sf::Vertex line11[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 154.f)),
+            sf::Vertex(sf::Vector2f(590.f, 154.f))
+        };
+
+        sf::Vertex line12[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 444.f)),
+            sf::Vertex(sf::Vector2f(590.f, 444.f))
+        };
+        sf::Vertex line13[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 301.f)),
+            sf::Vertex(sf::Vector2f(590.f, 301.f))
+        };
+        
+
+        sf::Vertex line14[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 373.5)),
+            sf::Vertex(sf::Vector2f(590.f, 373.5))
+        };
+
+        sf::Vertex line15[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 156.f)),
+            sf::Vertex(sf::Vector2f(590.f, 156.f))
+        };
+
+        sf::Vertex line16[] =
+        {
+            sf::Vertex(sf::Vector2f(558.f, 446.f)),
+            sf::Vertex(sf::Vector2f(590.f, 446.f))
+        };
+        /*
+
+        float graphic_step = 290 / 360;
+
+        sf::Vertex line17[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 445.f - graphic_step / 4)),
+            sf::Vertex(sf::Vector2f(590.f, 445.f - graphic_step / 4))
+        };
+
+        sf::Vertex line18[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 445.f - graphic_step / 2)),
+            sf::Vertex(sf::Vector2f(590.f, 445.f - graphic_step / 2))
+        };
+        sf::Vertex line19[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 372.5 - graphic_step / 2)),
+            sf::Vertex(sf::Vector2f(590.f, 372.5 - graphic_step / 2))
+        };
+
+        sf::Vertex line20[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 372.5 - graphic_step)),
+            sf::Vertex(sf::Vector2f(590.f, 372.5 - graphic_step))
+        };
+
+        sf::Vertex line21[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 300.f - graphic_step)),
+            sf::Vertex(sf::Vector2f(590.f, 300.f - graphic_step))
+        };
+
+        sf::Vertex line22[] =
+        {
+            sf::Vertex(sf::Vector2f(560.f, 300.f - 2 * graphic_step)),
+            sf::Vertex(sf::Vector2f(590.f, 300.f - 2 * graphic_step))
+        };
+
+
+        */
+
+
+
+
+        window.draw(text_min);
+        window.draw(text_max);
+        window.draw(text_half);
+        window.draw(text_quarter);
+
         window.draw(quad1);
         window.draw(quad2);
         window.draw(quad3);
-
         window.draw(line1, 2, sf::Lines);
         window.draw(line2, 2, sf::Lines);
         window.draw(line3, 2, sf::Lines);
         window.draw(line4, 2, sf::Lines);
+        window.draw(line5, 2, sf::Lines);
+        window.draw(line6, 2, sf::Lines);
+        window.draw(line7, 2, sf::Lines);
+        window.draw(line8, 2, sf::Lines);
+        window.draw(line9, 2, sf::Lines);
+        window.draw(line10, 2, sf::Lines);
+        window.draw(line11, 2, sf::Lines);
+        window.draw(line12, 2, sf::Lines);
+        window.draw(line13, 2, sf::Lines);
+        window.draw(line14, 2, sf::Lines);
+        window.draw(line15, 2, sf::Lines);
+        window.draw(line16, 2, sf::Lines);
+        /*
+        window.draw(line17, 2, sf::Lines);
+        window.draw(line18, 2, sf::Lines);
+        window.draw(line19, 2, sf::Lines);
+        window.draw(line20, 2, sf::Lines);
+        window.draw(line21, 2, sf::Lines);
+        window.draw(line22, 2, sf::Lines);
+*/
 
         window.display();
 
