@@ -270,7 +270,6 @@ int main()
 
         window.clear();
        
-
         for (int i = 0; i < sprites.size(); i++)
         {
             sprites[i].setRadius(2);
@@ -389,6 +388,7 @@ int main()
         sf::Text text_max;
         sf::Text text_half;
         sf::Text text_quarter;
+        sf::Text text_density;
 
         sf::Font font;
         font.loadFromFile("font.ttf");
@@ -397,6 +397,7 @@ int main()
         text_max.setFont(font); 
         text_half.setFont(font); 
         text_quarter.setFont(font);  
+        text_density.setFont(font);
 
         std::string min_str = std::to_string(min_rho);
         std::string max_str = std::to_string(max_rho);
@@ -407,6 +408,7 @@ int main()
         text_max.setString(max_str);
         text_half.setString(half_str);
         text_quarter.setString(quarter_str);
+        text_density.setString("Density");
 
         int size = 12;
 
@@ -414,17 +416,20 @@ int main()
         text_max.setCharacterSize(size); 
         text_half.setCharacterSize(size); 
         text_quarter.setCharacterSize(size);  
+        text_density.setCharacterSize(20);
 
 
         text_min.setFillColor(sf::Color::White);
         text_max.setFillColor(sf::Color::White);
         text_half.setFillColor(sf::Color::White);
         text_quarter.setFillColor(sf::Color::White);
+        text_density.setFillColor(sf::Color::White);
 
         text_min.setPosition(560.f - 7 * min_str.length(), 445.f - size / 2);
         text_max.setPosition(560.f - 7 * max_str.length(), 155.f - size / 2);
         text_half.setPosition(560.f - 7 * half_str.length(), 300.f - size / 2);
         text_quarter.setPosition(560.f - 7 * quarter_str.length(), 372.5 - size / 2);
+        text_density.setPosition((590.f + (560.f - 7 * max_str.length())) / 2 - 25.f, 120.f);
 
 
         sf::Vertex line5[] =
@@ -547,6 +552,7 @@ int main()
         window.draw(text_max);
         window.draw(text_half);
         window.draw(text_quarter);
+        window.draw(text_density);
 
         window.draw(quad1);
         window.draw(quad2);
