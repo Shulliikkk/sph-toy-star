@@ -35,4 +35,4 @@ public:
     void change_pressure(double new_pressure);
 };
 
-#endif 
+#endif // PARTICLE_H

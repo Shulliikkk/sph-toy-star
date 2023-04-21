@@ -6,7 +6,9 @@ Timer<Duration_Type>::Timer() : start(std::chrono::steady_clock::now()),
 }
 
 template<typename Duration_Type>
-Timer<Duration_Type>::Timer(unsigned* counter) : start(std::chrono::steady_clock::now(), counter(counter) {}
+Timer<Duration_Type>::Timer(unsigned* counter) : start(std::chrono::steady_clock::now()),
+                                  counter(counter) {
+}
 
 template<typename Duration_Type>
 Timer<Duration_Type>::~Timer() {

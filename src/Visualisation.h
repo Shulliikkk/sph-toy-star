@@ -14,4 +14,4 @@ public:
     void loop(Vec_2d<Particle> result, Vec_2d<double> density, double h);
 };
 
-#endif
+#endif // VISUALISATION_H

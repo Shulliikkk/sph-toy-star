@@ -1,28 +1,33 @@
 #include "Particle.h"
 
-Particle::Particle(Vec_1d<double> position, Vec_1d<double> velocity, double m) :
-    m(m), velocity(velocity), position(position) {}
-
+Particle::Particle(Vec_1d<double> position,
+                   Vec_1d<double> velocity,
+                   double m) : 
+    m(m),
+    velocity(velocity),
+    position(position) {
+}
 Particle::Particle() {
     Particle({0., 0.}, {0., 0.}, 0.03);
 }
 
 double Particle::distance_to(Particle& other) const {
     return std::sqrt(std::pow(position[0] - other.position[0], 2) +
-                     std::pow(position[1] - other.position[1], 2));
+                     std::pow(position[1] - other.position[1], 2)
+           );
 }
 
 double Particle::W(Particle& other, double h) {
     double abs_r = distance_to(other);
     return 1 / (h * h * h * std::pow(PI, 1.5)) *
-        std::exp(-abs_r * abs_r / (h * h));
+           std::exp(-abs_r * abs_r / (h * h));
 }
 
 Vec_1d<double> Particle::gradW(Particle& other, double h) {
     double abs_r = distance_to(other);
     double scalar_deriv = -2 / (h * h * h * h * h * std::pow(PI, 1.5)) *
-        std::exp(-abs_r * abs_r / (h * h));
-
+                          std::exp(-abs_r * abs_r / (h * h));
+    
     Vec_1d<double> grad = {
         scalar_deriv * (position[0] - other.position[0]),
         scalar_deriv * (position[1] - other.position[1])

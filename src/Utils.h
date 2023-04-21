@@ -13,4 +13,4 @@ using Vec_3d = std::vector<std::vector<std::vector<T>>>;
 
 const double PI = std::acos(-1.0);
 
-#endif
+#endif // UTILS_H

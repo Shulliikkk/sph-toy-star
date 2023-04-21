@@ -15,5 +15,5 @@ public:
     ~Timer();
 };
 
-#endif
+#endif //TIMER_H
 
