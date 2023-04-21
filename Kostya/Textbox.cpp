@@ -1,4 +1,3 @@
-#include <string>
 #include "Textbox.h"
 
 Textbox::Textbox(sf::RenderWindow& window,
@@ -47,6 +46,10 @@ void Textbox::change_text(sf::Event& event) {
             }
             else if (event.text.unicode == 8) {
                 _text = _text.substr(0, _text.size() - 1);
+            }
+        }
+    }
+}
 
 void Textbox::show() {
     _window.draw(_textbox_sprite);

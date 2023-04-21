@@ -13,7 +13,7 @@
 #include "Visualisation.h"
 
 int main() {
-    Processing model(100, 0.1, 20, 0.1, 1, 1, 4, 0.04, 12);
+    Processing model(500, 0.1, 20, 0.1, 1, 1, 4, 0.04, 12);
     //Processing::Processing(int N_part, double h, double d, double k, double n, double nu, double lambda, double dt, double maxt)
 
     Vec_2d<Particle> result;

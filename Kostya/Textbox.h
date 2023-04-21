@@ -2,6 +2,7 @@
 #define TEXTBOX_H
 
 #include <SFML/Graphics.hpp>
+#include <string>
 #include "Active_Box.h"
 
 class Textbox : public Active_Box {

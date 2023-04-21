@@ -73,7 +73,7 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
             sprites[i].setRadius(2);
             sprites[i].setOutlineThickness(1.5);
 
-            for(std::size_t j = 0; j < result[step].size(); j++) {
+            for (std::size_t j = 0; j < result[step].size(); j++) {
                 sprites[i].setPosition(result[step][j].get_position()[0] * 100 + 300, result[step][j].get_position()[1] * 100 + 300);
                 double rho = density[step][j];
                 if (rho < rhos_quarter)
@@ -115,7 +115,6 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
                 window.draw(sprites[i]);
             }
         }
-
 
         //шкала
         sf::VertexArray quad1(sf::Quads, 4);

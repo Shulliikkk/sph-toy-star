@@ -11,7 +11,7 @@ bool Menu::check_mouse_click(sf::Event& event, T& box, sf::RenderWindow& window)
     sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
     mouse_position_in_f.x = mouse_position.x;
     mouse_position_in_f.y = mouse_position.y;
-    if (event.key.code == Mouse::Left) {
+    if (event.key.code == sf::Mouse::Left) {
         if (mouse_position_in_f.x >= box.get_position().x && mouse_position_in_f.x <= box.get_position().x + box.get_size().x &&
             mouse_position_in_f.y >= box.get_position().y && mouse_position_in_f.y <= box.get_position().y + box.get_size().y) {
                 box.set_text("");
@@ -34,7 +34,7 @@ int Menu::string2int(std::string string_) {
     return result_number;
 }
 
-Menu::Menu() {};
+//Menu::Menu() {};
 
 sf::Vector3i Menu::menu() {
     sf::RenderWindow window(sf::VideoMode(1376, 768), "SPH");
@@ -73,7 +73,7 @@ sf::Vector3i Menu::menu() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == Event::MouseButtonPressed) {
+            if (event.type == sf::Event::MouseButtonPressed) {
                 check_mouse_click<Textbox>(event, textbox, window);
                 check_mouse_click<Textbox>(event, textbox2, window);
                 check_mouse_click<Textbox>(event, textbox3, window);
@@ -100,7 +100,8 @@ sf::Vector3i Menu::menu() {
            window.display();
        }
     }
+}
 
-    sf::Vector3i Menu::result(string2int(textbox.get_text()), string2int(textbox2.get_text()), string2int(textbox3.get_text()));
+sf::Vector3i Menu::result(string2int(textbox.get_text()), string2int(textbox2.get_text()), string2int(textbox3.get_text()));
     return result;
 }
