@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(SPH-STAR)
 
 set(CMAKE_CXX_STANDART 17)
-set(CMAKE_CXX_FLAGS "-O2")
+set(CMAKE_CXX_FLAGS "-O3")
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCES

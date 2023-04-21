@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -g CMakeFiles/SPH-STAR.dir/kotyk.cpp.o CMakeFiles/SPH-STAR.dir/Particle.cpp.o CMakeFiles/SPH-STAR.dir/Timer.cpp.o CMakeFiles/SPH-STAR.dir/Processing.cpp.o CMakeFiles/SPH-STAR.dir/Visualisation.cpp.o -o SPH-STAR  /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.5.1 /usr/lib/x86_64-linux-gnu/libsfml-system.so.2.5.1 
