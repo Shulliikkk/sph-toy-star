@@ -3,10 +3,10 @@ project(SPH-STAR)
 
 set(CMAKE_CXX_STANDART 17)
 set(CMAKE_CXX_FLAGS "-O2")
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 set(SOURCES
-	src/kotyk.cpp
+	src/main.cpp
 	src/Particle.cpp
 	src/Timer.cpp
 	src/Processing.cpp

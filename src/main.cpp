@@ -5,30 +5,33 @@
 #include <iomanip>
 #include <unistd.h>
 #include <chrono>
+
 #include "Utils.h"
-//#include "Timer.h"
+#include "Timer.h"
 #include "Particle.h"
 #include "Processing.h"
 #include "Visualisation.h"
 #include "Menu.h"
 
 int main() {
-    Processing model(100, 0.1, 20, 0.1, 1, 1, 4, 0.04, 12);
+
+    sf::Vector3i menu_data = call_menu();
+    int N_part = menu_data.x;
+    double maxt = (double) menu_data.y;
+    double h = (double) menu_data.z / 100.;
+
+    Processing model(N_part, h, 20, 0.1, 1, 1, 4, 0.04, maxt);
+    //Processing::Processing(int N_part, double h, double d, double k, double n, double nu, double lambda, double dt, double maxt)
 
     Vec_2d<Particle> result;
-    /*
     {
-        Timer<std::chrono::seconds> t;
+        //Timer<std::chrono::seconds> t;
         result = model.calc();
     }
-    */
 
-    Menu menu;
     Visualisation visualisation;
-    sf::Vector3i menu_data = menu.menu();
     Vec_2d<double> density = model.get_density_for_all();
-    std::cout << menu_data.x << ' ' << menu_data.y << ' ' << menu_data.z << std::endl;
     visualisation.loop(result, density, 0.1);
-
+    
     return 0;
 }
