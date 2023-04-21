@@ -3,14 +3,16 @@ project(SPH-STAR)
 
 set(CMAKE_CXX_STANDART 17)
 set(CMAKE_CXX_FLAGS "-O2")
-set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCES
-	src/main.cpp
-	src/Particle.cpp
-	src/Timer.cpp
-	src/Processing.cpp
-	src/Visualisation.cpp
+	main.cpp
+	Particle.cpp
+	Processing.cpp
+	Visualisation.cpp
+	Active_Box.cpp
+	Textbox.cpp
+	Menu.cpp
+	Utils.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

@@ -1,0 +1,3 @@
+/home/grenatson/repositories/sph-toy-star/project/build/CMakeFiles/SPH-STAR.dir
+/home/grenatson/repositories/sph-toy-star/project/build/CMakeFiles/edit_cache.dir
+/home/grenatson/repositories/sph-toy-star/project/build/CMakeFiles/rebuild_cache.dir
