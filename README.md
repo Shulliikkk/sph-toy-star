@@ -1,4 +1,4 @@
-# sph-toy-star
+# Моделирование образования звезды методом SPH
 
 ![SPH Star GIF](sph.GIF "N = 200")
 
