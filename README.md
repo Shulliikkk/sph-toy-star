@@ -2,7 +2,7 @@
 
 ![SPH Star GIF](sph.GIF "N = 200")
 
-**[ссылка](https://vk.com/away.php?to=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dbs45NErLxuA&cc_key=)** на видео с каким-никаким описанием
+**[ссылка](https://vk.com/away.php?to=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dbs45NErLxuA&cc_key=)** на видео с **лучшим** описанием
 
 ## как собрать проект?
 
