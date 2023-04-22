@@ -30,7 +30,9 @@ sf::Color Visualisation::hsv(int hue, double sat, double val) {
       }
 }
 
-void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double h) {
+void Visualisation::loop(Vec_2d<Particle> result,
+                         Vec_2d<double> density,
+                         double h) {
     int N_part = result[0].size();
     std::vector<sf::CircleShape> sprites(N_part);
     std::vector<double> rhos;
@@ -59,6 +61,148 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
 
     std::sort(rhos.begin(), rhos.end() - 1);
 
+    //шкала
+    sf::VertexArray quad1(sf::Quads, 4);
+    sf::VertexArray quad2(sf::Quads, 4);
+    sf::VertexArray quad3(sf::Quads, 4);
+
+    quad1[0].position = sf::Vector2f(560.f, 155.f);
+    quad1[1].position = sf::Vector2f(590.f, 155.f);
+    quad1[2].position = sf::Vector2f(590.f, 255.f);
+    quad1[3].position = sf::Vector2f(560.f, 255.f);
+
+    quad2[0].position = sf::Vector2f(560.f, 255.f);
+    quad2[1].position = sf::Vector2f(590.f, 255.f);
+    quad2[2].position = sf::Vector2f(590.f, 350.f);
+    quad2[3].position = sf::Vector2f(560.f, 350.f);
+
+    quad3[0].position = sf::Vector2f(560.f, 350.f);
+    quad3[1].position = sf::Vector2f(590.f, 350.f);
+    quad3[2].position = sf::Vector2f(590.f, 445.f);
+    quad3[3].position = sf::Vector2f(560.f, 445.f);
+
+    quad1[0].color = sf::Color{255, 0, 255, 255};
+    quad1[1].color = sf::Color{255, 0, 255, 255};
+    quad1[2].color = sf::Color{0, 255, 255, 255};
+    quad1[3].color = sf::Color{0, 255, 255, 255};
+
+    quad2[0].color = sf::Color{0, 255, 255, 255};
+    quad2[1].color = sf::Color{0, 255, 255, 255};
+    quad2[2].color = sf::Color{255, 255, 0, 255};
+    quad2[3].color = sf::Color{255, 255, 0, 255};
+
+    quad3[0].color = sf::Color{255, 255, 0, 255};
+    quad3[1].color = sf::Color{255, 255, 0, 255};
+    quad3[2].color = sf::Color{255, 0, 0, 255};
+    quad3[3].color = sf::Color{255, 0, 0, 255};
+
+    sf::Text text_min;
+    sf::Text text_max;
+    sf::Text text_half;
+    sf::Text text_quarter;
+    sf::Text text_density;
+
+    sf::Font font;
+    font.loadFromFile("data/arial.ttf");
+
+    text_min.setFont(font);
+    text_max.setFont(font);
+    text_half.setFont(font);
+    text_quarter.setFont(font);
+    text_density.setFont(font);
+
+    std::string min_str = std::to_string(min_rho);
+    std::string max_str = std::to_string(max_rho);
+    std::string half_str = std::to_string(rhos_half);
+    std::string quarter_str = std::to_string(rhos_quarter);
+
+    auto round_string = [](std::string& string) {
+        string.erase(std::next(string.begin(), string.find(".") + 2), string.end());
+    };
+
+    round_string(min_str);
+    round_string(max_str);
+    round_string(half_str);
+    round_string(quarter_str);
+
+    text_min.setString(min_str);
+    text_max.setString(max_str);
+    text_half.setString(half_str);
+    text_quarter.setString(quarter_str);
+    text_density.setString("Density");
+
+    int size = 14;
+
+    text_min.setCharacterSize(size);
+    text_max.setCharacterSize(size);
+    text_half.setCharacterSize(size);
+    text_quarter.setCharacterSize(size);
+    text_density.setCharacterSize(20);
+
+    text_min.setFillColor(sf::Color::White);
+    text_max.setFillColor(sf::Color::White);
+    text_half.setFillColor(sf::Color::White);
+    text_quarter.setFillColor(sf::Color::White);
+    text_density.setFillColor(sf::Color::White);
+
+    text_min.setPosition(555.f - 8 * min_str.length(), 442.f - size / 2);
+    text_max.setPosition(555.f - 8 * max_str.length(), 152.f - size / 2);
+    text_half.setPosition(555.f - 8 * half_str.length(),
+                          297.f - size / 2);
+    text_quarter.setPosition(555.f - 8 * quarter_str.length(),
+                             369.5 - size / 2);
+    text_density.setPosition((570.f + (560.f - 7 * max_str.length())) / 2 - 25.f, 120.f);
+
+    Vec_2d<sf::Vertex> lines{
+        {sf::Vertex(sf::Vector2f(560.f, 155.f)),
+        sf::Vertex(sf::Vector2f(590.f, 155.f))},
+
+        {sf::Vertex(sf::Vector2f(590.f, 155.f)),
+        sf::Vertex(sf::Vector2f(590.f, 445.f))},
+
+        {sf::Vertex(sf::Vector2f(590.f, 445.f)),
+        sf::Vertex(sf::Vector2f(560.f, 445.f))},
+
+        {sf::Vertex(sf::Vector2f(560.f, 445.f)),
+        sf::Vertex(sf::Vector2f(560.f, 155.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 300.f)),
+        sf::Vertex(sf::Vector2f(590.f, 300.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 372.5)),
+        sf::Vertex(sf::Vector2f(590.f, 372.5))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 155.f)),
+        sf::Vertex(sf::Vector2f(590.f, 155.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 445.f)),
+        sf::Vertex(sf::Vector2f(590.f, 445.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 299.f)),
+        sf::Vertex(sf::Vector2f(590.f, 299.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 371.5)),
+        sf::Vertex(sf::Vector2f(590.f, 371.5))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 444.f)),
+        sf::Vertex(sf::Vector2f(590.f, 444.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 444.f)),
+        sf::Vertex(sf::Vector2f(590.f, 444.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 301.f)),
+        sf::Vertex(sf::Vector2f(590.f, 301.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 373.5)),
+        sf::Vertex(sf::Vector2f(590.f, 373.5))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 156.f)),
+        sf::Vertex(sf::Vector2f(590.f, 156.f))},
+
+        {sf::Vertex(sf::Vector2f(558.f, 446.f)),
+        sf::Vertex(sf::Vector2f(590.f, 446.f))}
+    };
+
     std::size_t step = 0;
     while (window.isOpen()) {
         sf::Event event;
@@ -73,39 +217,30 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
             sprites[i].setRadius(2);
             sprites[i].setOutlineThickness(1.5);
 
-            for (std::size_t j = 0; j < result[step].size(); j++) {
+            for(std::size_t j = 0; j < result[step].size(); j++) {
                 sprites[i].setPosition(result[step][j].get_position()[0] * 100 + 300, result[step][j].get_position()[1] * 100 + 300);
                 double rho = density[step][j];
-                if (rho < rhos_quarter)
-                {
-                    for (int k = 1; k < 360; k++)
-                    {
-                        if (min_rho + (k - 1) * rhos_step / 4 <= rho && rho < min_rho + k * rhos_step / 4)
-                        {
+                if (rho < rhos_quarter) {
+                    for (int k = 1; k < 360; k++) {
+                        if (min_rho + (k - 1) * rhos_step / 4 <= rho && rho < min_rho + k * rhos_step / 4) {
                             sprites[i].setFillColor(hsv(k, 1.f, 0.5));
                             sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                         }
                     }
                 }
 
-                else if (rho < rhos_half)
-                {
-                    for (int k = 1; k < 180; k++)
-                    {
-                        if (rhos_quarter + (k - 1) * rhos_step / 2 <= rho && rho < rhos_quarter + k * rhos_step / 2)
-                        {
+                else if (rho < rhos_half) {
+                    for (int k = 1; k < 180; k++) {
+                        if (rhos_quarter + (k - 1) * rhos_step / 2 <= rho && rho < rhos_quarter + k * rhos_step / 2) {
                             sprites[i].setFillColor(hsv(k, 1.f, 0.5));
                             sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                         }
                     }
                 }
 
-                else
-                {
-                    for (int k = 1; k < 180; k++)
-                    {
-                        if (rhos_half + (k - 1) * rhos_step <= rho && rho < rhos_half + k * rhos_step)
-                        {
+                else {
+                    for (int k = 1; k < 180; k++) {
+                        if (rhos_half + (k - 1) * rhos_step <= rho && rho < rhos_half + k * rhos_step) {
                             sprites[i].setFillColor(hsv(k, 1.f, 0.5));
                             sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                         }
@@ -116,220 +251,6 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
             }
         }
 
-        //шкала
-        sf::VertexArray quad1(sf::Quads, 4);
-        sf::VertexArray quad2(sf::Quads, 4);
-        sf::VertexArray quad3(sf::Quads, 4);
-
-        quad1[0].position = sf::Vector2f(560.f, 155.f);
-        quad1[1].position = sf::Vector2f(590.f, 155.f);
-        quad1[2].position = sf::Vector2f(590.f, 255.f);
-        quad1[3].position = sf::Vector2f(560.f, 255.f);
-
-        quad2[0].position = sf::Vector2f(560.f, 255.f);
-        quad2[1].position = sf::Vector2f(590.f, 255.f);
-        quad2[2].position = sf::Vector2f(590.f, 350.f);
-        quad2[3].position = sf::Vector2f(560.f, 350.f);
-
-        quad3[0].position = sf::Vector2f(560.f, 350.f);
-        quad3[1].position = sf::Vector2f(590.f, 350.f);
-        quad3[2].position = sf::Vector2f(590.f, 445.f);
-        quad3[3].position = sf::Vector2f(560.f, 445.f);
-
-
-        quad1[0].color = sf::Color{255, 0, 255, 255};
-        quad1[1].color = sf::Color{255, 0, 255, 255};
-        quad1[2].color = sf::Color{0, 255, 255, 255};
-        quad1[3].color = sf::Color{0, 255, 255, 255};
-
-        quad2[0].color = sf::Color{0, 255, 255, 255};
-        quad2[1].color = sf::Color{0, 255, 255, 255};
-        quad2[2].color = sf::Color{255, 255, 0, 255};
-        quad2[3].color = sf::Color{255, 255, 0, 255};
-
-        quad3[0].color = sf::Color{255, 255, 0, 255};
-        quad3[1].color = sf::Color{255, 255, 0, 255};
-        quad3[2].color = sf::Color{255, 0, 0, 255};
-        quad3[3].color = sf::Color{255, 0, 0, 255};
-
-       sf::Text text_min;
-       sf::Text text_max;
-       sf::Text text_half;
-       sf::Text text_quarter;
-       sf::Text text_density;
-
-       sf::Font font;
-       font.loadFromFile("data/arial.ttf");
-
-       text_min.setFont(font);
-       text_max.setFont(font);
-       text_half.setFont(font);
-       text_quarter.setFont(font);
-       text_density.setFont(font);
-
-       std::string min_str = std::to_string(min_rho);
-       std::string max_str = std::to_string(max_rho);
-       std::string half_str = std::to_string(rhos_half);
-       std::string quarter_str = std::to_string(rhos_quarter);
-
-       text_min.setString(min_str);
-       text_max.setString(max_str);
-       text_half.setString(half_str);
-       text_quarter.setString(quarter_str);
-       text_density.setString("Density");
-
-       int size = 12;
-
-       text_min.setCharacterSize(size);
-       text_max.setCharacterSize(size);
-       text_half.setCharacterSize(size);
-       text_quarter.setCharacterSize(size);
-       text_density.setCharacterSize(20);
-
-       text_min.setFillColor(sf::Color::White);
-       text_max.setFillColor(sf::Color::White);
-       text_half.setFillColor(sf::Color::White);
-       text_quarter.setFillColor(sf::Color::White);
-       text_density.setFillColor(sf::Color::White);
-
-       text_min.setPosition(560.f - 8 * min_str.length(), 442.f - size / 2);
-       text_max.setPosition(560.f - 8 * max_str.length(), 152.f - size / 2);
-       text_half.setPosition(560.f - 8 * half_str.length(), 297.f - size / 2);
-       text_quarter.setPosition(560.f - 8 * quarter_str.length(), 369.5 - size / 2);
-       text_density.setPosition((590.f + (560.f - 7 * max_str.length())) / 2 - 25.f, 120.f);
-
-       sf::Vertex line1[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 155.f)),
-           sf::Vertex(sf::Vector2f(590.f, 155.f))
-       };
-
-       sf::Vertex line2[] =
-       {
-           sf::Vertex(sf::Vector2f(590.f, 155.f)),
-           sf::Vertex(sf::Vector2f(590.f, 445.f))
-       };
-
-       sf::Vertex line3[] =
-       {
-           sf::Vertex(sf::Vector2f(590.f, 445.f)),
-           sf::Vertex(sf::Vector2f(560.f, 445.f))
-       };
-
-       sf::Vertex line4[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 445.f)),
-           sf::Vertex(sf::Vector2f(560.f, 155.f))
-       };
-
-       sf::Vertex line5[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 300.f)),
-           sf::Vertex(sf::Vector2f(590.f, 300.f))
-       };
-
-       sf::Vertex line6[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 372.5)),
-           sf::Vertex(sf::Vector2f(590.f, 372.5))
-       };
-
-       sf::Vertex line7[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 155.f)),
-           sf::Vertex(sf::Vector2f(590.f, 155.f))
-       };
-
-       sf::Vertex line8[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 445.f)),
-           sf::Vertex(sf::Vector2f(590.f, 445.f))
-       };
-
-       sf::Vertex line9[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 299.f)),
-           sf::Vertex(sf::Vector2f(590.f, 299.f))
-       };
-
-       sf::Vertex line10[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 371.5)),
-           sf::Vertex(sf::Vector2f(590.f, 371.5))
-       };
-
-       sf::Vertex line11[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 154.f)),
-           sf::Vertex(sf::Vector2f(590.f, 154.f))
-       };
-
-       sf::Vertex line12[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 444.f)),
-           sf::Vertex(sf::Vector2f(590.f, 444.f))
-       };
-       sf::Vertex line13[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 301.f)),
-           sf::Vertex(sf::Vector2f(590.f, 301.f))
-       };
-
-       sf::Vertex line14[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 373.5)),
-           sf::Vertex(sf::Vector2f(590.f, 373.5))
-       };
-
-       sf::Vertex line15[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 156.f)),
-           sf::Vertex(sf::Vector2f(590.f, 156.f))
-       };
-
-       sf::Vertex line16[] =
-       {
-           sf::Vertex(sf::Vector2f(558.f, 446.f)),
-           sf::Vertex(sf::Vector2f(590.f, 446.f))
-       };
-
-       double graphic_step = 290 / 360;
-
-       sf::Vertex line17[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 445.f - graphic_step / 4)),
-           sf::Vertex(sf::Vector2f(590.f, 445.f - graphic_step / 4))
-       };
-
-       sf::Vertex line18[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 445.f - graphic_step / 2)),
-           sf::Vertex(sf::Vector2f(590.f, 445.f - graphic_step / 2))
-       };
-       sf::Vertex line19[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 372.5 - graphic_step / 2)),
-           sf::Vertex(sf::Vector2f(590.f, 372.5 - graphic_step / 2))
-       };
-
-       sf::Vertex line20[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 372.5 - graphic_step)),
-           sf::Vertex(sf::Vector2f(590.f, 372.5 - graphic_step))
-       };
-
-       sf::Vertex line21[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 300.f - graphic_step)),
-           sf::Vertex(sf::Vector2f(590.f, 300.f - graphic_step))
-       };
-
-       sf::Vertex line22[] =
-       {
-           sf::Vertex(sf::Vector2f(560.f, 300.f - 2 * graphic_step)),
-           sf::Vertex(sf::Vector2f(590.f, 300.f - 2 * graphic_step))
-       };
-
        window.draw(text_min);
        window.draw(text_max);
        window.draw(text_half);
@@ -339,28 +260,11 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
        window.draw(quad1);
        window.draw(quad2);
        window.draw(quad3);
-       window.draw(line1, 2, sf::Lines);
-       window.draw(line2, 2, sf::Lines);
-       window.draw(line3, 2, sf::Lines);
-       window.draw(line4, 2, sf::Lines);
-       window.draw(line5, 2, sf::Lines);
-       window.draw(line6, 2, sf::Lines);
-       window.draw(line7, 2, sf::Lines);
-       window.draw(line8, 2, sf::Lines);
-       window.draw(line9, 2, sf::Lines);
-       window.draw(line10, 2, sf::Lines);
-       window.draw(line11, 2, sf::Lines);
-       window.draw(line12, 2, sf::Lines);
-       window.draw(line13, 2, sf::Lines);
-       window.draw(line14, 2, sf::Lines);
-       window.draw(line15, 2, sf::Lines);
-       window.draw(line16, 2, sf::Lines);
-       window.draw(line17, 2, sf::Lines);
-       window.draw(line18, 2, sf::Lines);
-       window.draw(line19, 2, sf::Lines);
-       window.draw(line20, 2, sf::Lines);
-       window.draw(line21, 2, sf::Lines);
-       window.draw(line22, 2, sf::Lines);
+
+       for(auto line : lines) {
+         sf::Vertex arr_line[] = {line[0], line[1]};
+         window.draw(arr_line, 2, sf::Lines);
+       }
 
        window.display();
 

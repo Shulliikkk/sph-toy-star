@@ -163,8 +163,8 @@ sf::Vector3i call_menu() {
 
     sf::Vector2f position3(900, 50);
     sf::Vector2f size3(320, 30);
-    std::string text3 = "enter the radius of particle";
-    std::string name3 = "radius:";
+    std::string text3 = "enter the smoothing length";
+    std::string name3 = "smoothing length:";
 
     sf::Vector2f position4(500, 600);
     sf::Vector2f size4(400, 150);
