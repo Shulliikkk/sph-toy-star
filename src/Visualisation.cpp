@@ -156,14 +156,16 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
        sf::Text text_max;
        sf::Text text_half;
        sf::Text text_quarter;
+       sf::Text text_density;
 
        sf::Font font;
-       font.loadFromFile("arial.ttf");
+       font.loadFromFile("data/arial.ttf");
 
        text_min.setFont(font);
        text_max.setFont(font);
        text_half.setFont(font);
        text_quarter.setFont(font);
+       text_density.setFont(font);
 
        std::string min_str = std::to_string(min_rho);
        std::string max_str = std::to_string(max_rho);
@@ -174,6 +176,7 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
        text_max.setString(max_str);
        text_half.setString(half_str);
        text_quarter.setString(quarter_str);
+       text_density.setString("Density");
 
        int size = 12;
 
@@ -181,16 +184,19 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
        text_max.setCharacterSize(size);
        text_half.setCharacterSize(size);
        text_quarter.setCharacterSize(size);
+       text_density.setCharacterSize(20);
 
        text_min.setFillColor(sf::Color::White);
        text_max.setFillColor(sf::Color::White);
        text_half.setFillColor(sf::Color::White);
        text_quarter.setFillColor(sf::Color::White);
+       text_density.setFillColor(sf::Color::White);
 
        text_min.setPosition(560.f - 8 * min_str.length(), 442.f - size / 2);
        text_max.setPosition(560.f - 8 * max_str.length(), 152.f - size / 2);
        text_half.setPosition(560.f - 8 * half_str.length(), 297.f - size / 2);
        text_quarter.setPosition(560.f - 8 * quarter_str.length(), 369.5 - size / 2);
+       text_density.setPosition((590.f + (560.f - 7 * max_str.length())) / 2 - 25.f, 120.f);
 
        sf::Vertex line1[] =
        {
@@ -328,6 +334,7 @@ void Visualisation::loop(Vec_2d<Particle> result, Vec_2d<double> density, double
        window.draw(text_max);
        window.draw(text_half);
        window.draw(text_quarter);
+       window.draw(text_density);
 
        window.draw(quad1);
        window.draw(quad2);

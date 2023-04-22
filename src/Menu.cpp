@@ -153,8 +153,8 @@ sf::Vector3i call_menu() {
     std::string text = "enter the number of particles";
     std::string name = "number of particles:";
 
-    std::string texture_file = "textbox_texture3.png";
-    std::string texture_file2 = "button_texture.png";
+    std::string texture_file = "data/textbox_texture.png";
+    std::string texture_file2 = "data/button_texture.png";
 
     sf::Vector2f position2(500, 50);
     sf::Vector2f size2(320, 30);
@@ -170,9 +170,9 @@ sf::Vector3i call_menu() {
     sf::Vector2f size4(400, 150);
     std::string text4 = "click here to start";
 
-    Textbox textbox(window, position, size, text, name, "arial.ttf", texture_file);
-    Textbox textbox2(window, position2, size2, text2, name2, "arial.ttf", texture_file);
-    Textbox textbox3(window, position3, size3, text3, name3, "arial.ttf", texture_file);
+    Textbox textbox(window, position, size, text, name, "data/arial.ttf", texture_file);
+    Textbox textbox2(window, position2, size2, text2, name2, "data/arial.ttf", texture_file);
+    Textbox textbox3(window, position3, size3, text3, name3, "data/arial.ttf", texture_file);
     Active_Box button(window, position4, size4, texture_file2);
 
     while (window.isOpen()) {

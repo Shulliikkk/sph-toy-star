@@ -24,10 +24,14 @@ int main() {
     //Processing::Processing(int N_part, double h, double d, double k, double n, double nu, double lambda, double dt, double maxt)
 
     Vec_2d<Particle> result;
+    unsigned counter;
     {
-        //Timer<std::chrono::seconds> t;
+        Timer<std::chrono::milliseconds> t(&counter);
+        std::cout << "Processing..." << std::endl;
         result = model.calc();
     }
+    std::cout << "Processing lasted " << counter / 1000 << "."
+              << counter % 1000 << " seconds" << std::endl;
 
     Visualisation visualisation;
     Vec_2d<double> density = model.get_density_for_all();
