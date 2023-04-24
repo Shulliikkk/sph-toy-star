@@ -1,6 +1,8 @@
 #include "Visualisation.h"
 
-Visualisation::Visualisation() {}
+Visualisation::Visualisation(double h, double system_radius) :
+    h(h), system_radius(system_radius) {
+}
 
 sf::Color Visualisation::hsv(int hue, double sat, double val) {
       hue %= 360;
@@ -30,16 +32,16 @@ sf::Color Visualisation::hsv(int hue, double sat, double val) {
       }
 }
 
-void Visualisation::loop(Vec_2d<Particle> result,
-                         Vec_2d<double> density,
-                         double h) {
-    int N_part = result[0].size();
+void Visualisation::loop(
+        Vec_2d<Particle> result,
+        Vec_2d<double> density) {
+    N_part = result[0].size();
     std::vector<sf::CircleShape> sprites(N_part);
     std::vector<double> rhos;
     rhos.clear();
 
     for (std::size_t i = 0; i < result.size(); i++) {
-        for(std::size_t j = 0; j < result[i].size(); j++) {
+        for (std::size_t j = 0; j < result[i].size(); j++) {
             double rho = density[i][j];
             rhos.push_back(rho);
         }
@@ -59,7 +61,7 @@ void Visualisation::loop(Vec_2d<Particle> result,
     double rhos_quarter = min_rho + 360 * rhos_step / 4;
     double rhos_half = rhos_quarter + 180 * rhos_step / 2;
 
-    std::sort(rhos.begin(), rhos.end() - 1);
+    std::sort(rhos.begin(), rhos.end());
 
     //шкала
     sf::VertexArray quad1(sf::Quads, 4);
@@ -117,7 +119,9 @@ void Visualisation::loop(Vec_2d<Particle> result,
     std::string quarter_str = std::to_string(rhos_quarter);
 
     auto round_string = [](std::string& string) {
-        string.erase(std::next(string.begin(), string.find(".") + 2), string.end());
+        string.erase(std::next(string.begin(), string.find(".") + 2),
+                     string.end()
+        );
     };
 
     round_string(min_str);
@@ -213,71 +217,66 @@ void Visualisation::loop(Vec_2d<Particle> result,
 
         window.clear();
 
-        for (int i = 0; i < sprites.size(); i++) {
+        for (int i = 0; i < N_part; i++) {
             sprites[i].setRadius(2);
             sprites[i].setOutlineThickness(1.5);
+            auto pos = result[step][i].get_position();
+            auto pos_multiplier = 300 / (system_radius * 2);
+            sprites[i].setPosition(pos[0] * pos_multiplier + 300,
+                                   pos[1] * pos_multiplier + 300
+            );
 
-            for(std::size_t j = 0; j < result[step].size(); j++) {
-                sprites[i].setPosition(result[step][j].get_position()[0] * 100 + 300, result[step][j].get_position()[1] * 100 + 300);
-                double rho = density[step][j];
-                if (rho < rhos_quarter) {
-                    for (int k = 1; k < 360; k++) {
-                        if (min_rho + (k - 1) * rhos_step / 4 <= rho && rho < min_rho + k * rhos_step / 4) {
-                            sprites[i].setFillColor(hsv(k, 1.f, 0.5));
-                            sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
-                        }
+            double rho = density[step][i];
+            if (rho < rhos_quarter) {
+                for (int k = 1; k < 360; k++) {
+                    if (min_rho + (k - 1) * rhos_step / 4 <= rho && rho < min_rho + k * rhos_step / 4) {
+                        sprites[i].setFillColor(hsv(k, 1.f, 0.5));
+                        sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                     }
                 }
-
-                else if (rho < rhos_half) {
-                    for (int k = 1; k < 180; k++) {
-                        if (rhos_quarter + (k - 1) * rhos_step / 2 <= rho && rho < rhos_quarter + k * rhos_step / 2) {
-                            sprites[i].setFillColor(hsv(k, 1.f, 0.5));
-                            sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
-                        }
+            } else if (rho < rhos_half) {
+                for (int k = 1; k < 180; k++) {
+                    if (rhos_quarter + (k - 1) * rhos_step / 2 <= rho && rho < rhos_quarter + k * rhos_step / 2) {
+                        sprites[i].setFillColor(hsv(k, 1.f, 0.5));
+                        sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                     }
                 }
-
-                else {
-                    for (int k = 1; k < 180; k++) {
-                        if (rhos_half + (k - 1) * rhos_step <= rho && rho < rhos_half + k * rhos_step) {
-                            sprites[i].setFillColor(hsv(k, 1.f, 0.5));
-                            sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
-                        }
+            } else {
+                for (int k = 1; k < 180; k++) {
+                    if (rhos_half + (k - 1) * rhos_step <= rho && rho < rhos_half + k * rhos_step) {
+                        sprites[i].setFillColor(hsv(k, 1.f, 0.5));
+                        sprites[i].setOutlineColor(hsv(k, 1.f, 1.f));
                     }
                 }
-
-                window.draw(sprites[i]);
             }
+
+            window.draw(sprites[i]);
         }
 
-       window.draw(text_min);
-       window.draw(text_max);
-       window.draw(text_half);
-       window.draw(text_quarter);
-       window.draw(text_density);
+        window.draw(text_min);
+        window.draw(text_max);
+        window.draw(text_half);
+        window.draw(text_quarter);
+        window.draw(text_density);
 
-       window.draw(quad1);
-       window.draw(quad2);
-       window.draw(quad3);
+        window.draw(quad1);
+        window.draw(quad2);
+        window.draw(quad3);
 
-       for(auto line : lines) {
-         sf::Vertex arr_line[] = {line[0], line[1]};
-         window.draw(arr_line, 2, sf::Lines);
-       }
+        for(auto line : lines) {
+            sf::Vertex arr_line[] = {line[0], line[1]};
+            window.draw(arr_line, 2, sf::Lines);
+        }
 
-       window.display();
+        window.display();
 
-        if (step + 1  < result.size())
-            step += 1;
-        else
-            step = 0;
+        if (step + 1 < result.size()) step++;
+        else step = 0;
 
         sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
         sf::Int32 time_to_sleep = int(1000.f/want_fps) - frame_duration;
 
-        if (time_to_sleep > 0)
-        {
+        if (time_to_sleep > 0) {
             sf::sleep(sf::milliseconds(time_to_sleep));
         }
 

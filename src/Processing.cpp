@@ -1,19 +1,17 @@
 #include <random>
 #include "Processing.h"
 
-Processing::Processing(int N_part) :
-            N_part(N_part), h(0.1), d(8), k(0.1),
-            n(1), nu(1), lambda(4), dt(0.04), maxt(6),
-            time_steps(maxt / dt), N_grid_cells(d / (2 * h)) {
-    std::cout << "ts: "<< time_steps << std::endl;
-    std::cout << "cells: " << N_grid_cells << std::endl;
-}
-
 Processing::Processing(int N_part, double h, double d, double k, double n, double nu, double lambda, double dt, double maxt) : 
             N_part(N_part), h(h), d(d), k(k), n(n), nu(nu),
             lambda(lambda), dt(dt), maxt(maxt),
-            time_steps(maxt / dt), N_grid_cells(d / 2 / h) {
+            time_steps(maxt / dt), N_grid_cells(d / 2 / h),
+            system_radius(std::sqrt(N_grid_cells) * h) {
 }
+
+Processing::Processing(int N_part) :
+    Processing(N_part, 0.1, 8, 0.1, 1, 1, 4, 0.04, 6) {
+}
+
 
 void Processing::calc_density_for_all(Vec_1d<Particle>& particles, 
                                       Vec_1d<Particle>* grid) {
@@ -30,9 +28,7 @@ void Processing::calc_density_for_all(Vec_1d<Particle>& particles,
 				for (Particle grid_particle : grid[N_grid_cells * k + l]) {
 					double rho_ij = particle.get_m() * particle.W(grid_particle, h);
 					particle.change_density(particle.get_density() + rho_ij);
-                    //std::cout << "grid_dens before: " << grid_particle.get_density() << '\n';
 					grid_particle.change_density(grid_particle.get_density() + rho_ij);
-                    //std::cout << "grid_dens after: " << grid_particle.get_density() << '\n';
 				}
             }
         }
@@ -63,11 +59,6 @@ Vec_2d<double> Processing::calc_acceleration_for_all(
 
         a[i][0] += - nu * vel[0] - lambda * pos[0];
         a[i][1] += - nu * vel[1] - lambda * pos[1];
-        /*
-        particles[i].set_acceleration({- nu * vel[0] - lambda * pos[0],
-                                       - nu * vel[1] - lambda * pos[1]}
-        );
-        */
 
         for (int j = i + 1; j < N_part; j++) {
             auto pres = particles[i].get_pressure();
@@ -81,9 +72,6 @@ Vec_2d<double> Processing::calc_acceleration_for_all(
 
             a_p[0] = a_p_coef * grad[0];
             a_p[1] = a_p_coef * grad[1];
-
-            //particles[i].inc_acceleration({a_p[0], a_p[1]});
-            //particles[j].inc_acceleration({- a_p[0], - a_p[1]});
 
             a[i][0] += a_p[0];
             a[i][1] += a_p[1];
@@ -99,14 +87,13 @@ Vec_2d<double> Processing::calc_acceleration_for_all(
 Vec_2d<Particle> Processing::calc() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::normal_distribution<> NormRand(0, 0.2);
+    std::normal_distribution<> NormRand(0, system_radius);
     
     Vec_1d<Particle> particles;
     for (int i = 0; i < N_part; i++) {
         particles.push_back(Particle(Vec_1d<double>{NormRand(gen),
                                                     NormRand(gen)},
-                                     Vec_1d<double>{NormRand(gen),
-                                                    NormRand(gen)},
+                                     Vec_1d<double>{0, 0},
                                      0.03)
         );
     }
@@ -122,7 +109,7 @@ Vec_2d<Particle> Processing::calc() {
     }
 
     Vec_2d<double> acc = calc_acceleration_for_all(particles, grid);
-    for (int i = 0; i < time_steps; i++) {
+    for (int i = 1; i < time_steps; i++) {
         for (int j = 0; j < N_part; j++) {
             particles[j].change_velocity(acc[j], dt);
             particles[j].change_position(dt);
@@ -138,7 +125,6 @@ Vec_2d<Particle> Processing::calc() {
             int n_grid = N_grid_cells / 2 + particles[j].get_position()[0] / (2 * h);
             int m_grid = N_grid_cells / 2 - particles[j].get_position()[1] / (2 * h);
 
-            //std::cout << "grid index: " << N_grid_cells * m_grid + n_grid << std::endl;
             grid[N_grid_cells * m_grid + n_grid].push_back(particles[j]);
         }
     }
@@ -147,7 +133,6 @@ Vec_2d<Particle> Processing::calc() {
 }
 
 int Processing::get_N() const { return N_part; }
-double Processing::get_dt() const { return dt; }
-double Processing::get_maxt() const { return maxt; }
+double Processing::get_system_radius() const { return system_radius; }
 Vec_2d<double> Processing::get_density_for_all() { return density; }
 
