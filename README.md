@@ -1,8 +1,6 @@
 # Моделирование процесса образования звезды методом SPH
 
-![SPH Star GIF](sph.GIF "N = 200")
-
-![SPH Star second GIF](sph1000.GIF "N = 1000")
+![SPH Star GIF](sph.GIF "N = 1000")
 
 **[Ссылка](https://vk.com/away.php?to=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dbs45NErLxuA&cc_key=)** на видео с **лучшим** описанием и **подробнейшей** инструкцией по сборке
 
