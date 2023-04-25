@@ -33,9 +33,11 @@ int main() {
     std::cout << "Processing lasted " << counter / 1000 << "."
               << counter % 1000 << " seconds" << std::endl;
 
-    Visualisation visualisation(h, model.get_system_radius());
     Vec_2d<double> density = model.get_density_for_all();
-    visualisation.loop(result, density);
+    Visualisation visualisation(result, density,
+                                h, model.get_system_radius()
+    );
+    visualisation.loop();
     
     return 0;
 }
